@@ -1,0 +1,24 @@
+test:
+  name: hfl-pareto-eval
+  description: >
+    HFL Pareto sweep — mixed fee workload (clustered 1gwei / scattered 5gwei).
+    Workers 0-14: SB contracts (clustered, low fee). Workers 15-29: SC contracts (scattered, high fee).
+    300s measure only (no warmup — pool saturation maintained throughout), 100 TPS, 30 workers.
+  workers:
+    type: local
+    number: 30
+  rounds:
+    - label: measure
+      txDuration: 300
+      rateControl:
+        type: fixed-rate
+        opts:
+          tps: 100
+      workload:
+        module: benchmarks/stateBloatMixed.js
+        arguments:
+          slotsPerTx: 200
+          numClusteredContracts: 30
+          numScatteredContracts: 300
+          clusteredPrefix: SB
+          scatteredPrefix: SC
